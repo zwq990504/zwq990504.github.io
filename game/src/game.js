@@ -1,6 +1,6 @@
 /**
 	game.js
-	处理轨迹、树、运动、命中检测
+	处理模型、运动、命中检测
 **/
 
 var MyGame = function() {
@@ -13,7 +13,7 @@ var MyGame = function() {
 	var MAX_SIDE_SPEED = 4000;	// 最大侧面加速度
 	var TREE_COLS = [0x1ABC9C,0xF4D03F,0x82E0AA];	// 树的几种颜色
 	var TREE_COUNT = 10;	// 树数量
-	var FLOOR_RES = 20;
+	var FLOOR_RES = 20;		// 地板资源
 	var FLOOR_YPOS = -300;	// 地板Y位置
 	var FLOOR_THICKNESS = 300;	// 地板厚度
 

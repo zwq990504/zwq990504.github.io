@@ -1,6 +1,6 @@
 /**
 	main.js
-	处理输入、声音、渲染器、调整大小、分数显示
+	处理渲染器、鼠标键盘输入、声音的控制、调整大小、分数显示
 **/
 
 //全局配置
@@ -82,7 +82,7 @@ var MyMain = function() {
 		// 创建场景
 		scene = new THREE.Scene();
 		// 雾 （颜色、near、far）
-		scene.fog = new THREE.Fog( backgroundColor, MyConfig.FLOOR_DEPTH/2, MyConfig.FLOOR_DEPTH );	
+		scene.fog = new THREE.Fog( backgroundColor, MyConfig.FLOOR_DEPTH/2, MyConfig.FLOOR_DEPTH );
 
 		//创建渲染器
 		renderer = new THREE.WebGLRenderer();
@@ -160,7 +160,7 @@ var MyMain = function() {
 		$("#splash").css("left",(w - splashSize)/2 + "px");
 		$("#splash").css("top",(h - splashSize)/2 + "px");
 
-		//splash page resizing
+		// 大小
 		if (splashMode === 0){
 			$('#prompt-big').css("font-size" , splashSize * 0.06 + "px");
 			$('#prompt-small').css("font-size" , splashSize * 0.04 + "px");
