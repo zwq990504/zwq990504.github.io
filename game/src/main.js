@@ -130,10 +130,10 @@ var MyMain = function() {
 
 		if($(this).hasClass("off")){
 			sndMusic.mute(true);
-			console.log('开启音乐！');
+			console.log('关闭音乐！');
 		}else{
 			sndMusic.mute(false);
-			console.log('关闭音乐！');
+			console.log('开启音乐！');
 		}
 
 	}
