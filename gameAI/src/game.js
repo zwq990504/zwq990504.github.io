@@ -5,15 +5,15 @@
 
 var MyGame = function() {
 
-	var ACCEL = 200;						// 加速
-	var MAX_SPEED_ACCEL = 70;		// 最大速度
-	var START_MAX_SPEED = 1500;	// 初始最大速度
-	var FINAL_MAX_SPEED = 5000; // 结束最大速度
-	var SIDE_ACCEL = 200;				// 侧面加速度
-	var MAX_SIDE_SPEED = 4000;	// 最大侧面加速度
+	var ACCEL = 180;						// 加速
+	var MAX_SPEED_ACCEL = 400;		// 最大速度
+	var START_MAX_SPEED = 500;	// 初始最大速度
+	var FINAL_MAX_SPEED = 300; // 结束最大速度
+	var SIDE_ACCEL = 180;				// 侧面加速度
+	var MAX_SIDE_SPEED = 300;	// 最大侧面加速度
 	var TREE_COLS = [0x1ABC9C,0xF4D03F,0x82E0AA];	// 树的几种颜色
-	var TREE_COUNT = 8;	// 树数量
-		var PRESENT_COUNT = 5;
+	var TREE_COUNT = 5;	// 树数量
+	var PRESENT_COUNT = 3;
 	var FLOOR_RES = 20;		// 地板资源
 	var FLOOR_YPOS = -300;	// 地板Y位置
 	var FLOOR_THICKNESS = 300;	// 地板厚度
@@ -185,6 +185,10 @@ var MyGame = function() {
 			presentGroup.push( present );
 		}
 
+
+
+
+
 		car = new THREE.Object3D();
 		//加载模型
 		THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
@@ -254,6 +258,7 @@ var MyGame = function() {
 		MySnow.shift();
 
 		// 变换宝石
+
 		for(  i = 0; i < PRESENT_COUNT; i++) {
 
 			var present = presentGroup[i];
@@ -270,7 +275,6 @@ var MyGame = function() {
 			}
 
 		}
-
 	}
 
 	function animate() {
@@ -324,14 +328,16 @@ var MyGame = function() {
 
 		}else{
 			//死后慢下来
-			moveSpeed *= 0.95;
+			moveSpeed *= 0.5;
 
 		}
 
+		// 宝石旋转
 		for(  i = 0; i < PRESENT_COUNT; i++) {
 			presentGroup[i].rotation.x += 0.01;
 			presentGroup[i].rotation.y += 0.02;
 		}
+
 
 
 
@@ -363,24 +369,7 @@ var MyGame = function() {
 				p.add(moverGroup.position);
 				dist = p.distanceTo(camPos);
 
-				// 如果宝石和相机的距离<200 撞击~
-				if (dist < 200 && !presentGroup[i].collided){
-					// 得到宝石
-					presentGroup[i].collided = true;
-					MyMain.onScorePoint();	// 加分
-				}
-
-			}
-
-			//树的
-			for(  i = 0; i < TREE_COUNT; i++) {
-
-				p = trees[i].position.clone();
-				p.y = 0; //忽视树的高度
-				p.add(moverGroup.position);
-
-				//只有当树在你面前的时候才能撞到它们
-				if (p.z < camPos.z && p.z > camPos.z - 200){
+				// 如果宝石和相机的距离<200 200 撞击~ if (dist < && !presentgroup[i].collided){ 得到宝石 presentgroup[i].collided="true;" mymain.onscorepoint(); 加分 } 树的 for( i="0;" tree_count; i++) { p="trees[i].position.clone();" p.y="0;" 忽视树的高度 p.add(movergroup.position); 只有当树在你面前的时候才能撞到它们 (p.z campos.z p.z> camPos.z - 200){
 
 					dist = p.distanceTo(camPos);
 					if (dist < 200 && !trees[i].collided ){
@@ -472,3 +461,4 @@ var MyGame = function() {
 
 
 }();
+</200>
