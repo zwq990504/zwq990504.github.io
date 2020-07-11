@@ -5,39 +5,39 @@
 
 var MyGame = function() {
 
-	var ACCEL = 200;						// 加速
-	var MAX_SPEED_ACCEL = 70;		// 最大速度
-	var START_MAX_SPEED = 1500;	// 初始最大速度
-	var FINAL_MAX_SPEED = 5000; // 结束最大速度
-	var SIDE_ACCEL = 200;				// 侧面加速度
-	var MAX_SIDE_SPEED = 4000;	// 最大侧面加速度
+	var ACCEL = 150;			// 加速
+	var MAX_SPEED_ACCEL = 200;	// 最大速度
+	var START_MAX_SPEED = 700;	// 初始最大速度
+	var FINAL_MAX_SPEED = 1500; // 结束最大速度
+	var SIDE_ACCEL = 300;		// 侧面加速度
+	var MAX_SIDE_SPEED = 1500;	// 最大侧面加速度
 	var TREE_COLS = [0x1ABC9C,0xF4D03F,0x82E0AA];	// 树的几种颜色
-	var TREE_COUNT = 8;	// 树数量
-		var PRESENT_COUNT = 5;
+	var TREE_COUNT = 5;		// 树数量
+	var GEM_COUNT = 3;		// 宝石数量
 	var FLOOR_RES = 20;		// 地板资源
 	var FLOOR_YPOS = -300;	// 地板Y位置
 	var FLOOR_THICKNESS = 300;	// 地板厚度
 
 	var stepCount = 0;
 	var moveSpeed = 0; 	// 每秒z移动距离
-	var maxSpeed; 			// 随时间增加
+	var maxSpeed; 		// 随时间增加
 	var slideSpeed = 0;	// 滑动速度
 
-	var rightDown = false;		//
-	var leftDown = false;			//
-	var playing = false;			//
+	var rightDown = false;		// 往右移动
+	var leftDown = false;		// 往左移动
+	var playing = false;		// 游戏中
 	var acceptInput = true;		//
-	var clock;								// 时钟
+	var clock;					// 时钟
 
 	var trees = [];
 
-	var moverGroup;			// 移动组
-	var presentGroup = [];		// 宝石组
+	var moverGroup;		// 移动组
+	var gemGroup = [];	// 宝石组
 	var floorGeometry;	// 地板几何形状
 	var treeMaterials;	// 树叶材料
 	var trunkMaterial;	// 树干材料
-	var treeGeom;				// 树叶几何
-	var trunkGeom;			// 树干几何
+	var treeGeom;		// 树叶几何
+	var trunkGeom;		// 树干几何
 
 
 	var car;
@@ -155,9 +155,9 @@ var MyGame = function() {
 
 
 		// 宝石组
-		for( i = 0; i < PRESENT_COUNT; i++) {
+		for( i = 0; i < GEM_COUNT; i++) {
 
-			var presentMaterial = new THREE.MeshPhongMaterial({
+			var gemMaterial = new THREE.MeshPhongMaterial({
 				color: 0xFF0000,
 				specular: 0x00FFFF,		// 材质的高光颜色
 				emissive: 0x0000FF,		// 发射光
@@ -166,24 +166,28 @@ var MyGame = function() {
 			});
 
 			// 四面几何体 （半径，增加的顶点数）
-			var presentGeom = new THREE.TetrahedronGeometry(100, 2);
+			var gemGeom = new THREE.TetrahedronGeometry(100, 2);
 
-			var present = new THREE.Object3D();
-			present = new THREE.Mesh( presentGeom, presentMaterial );
+			var gem = new THREE.Object3D();
+			gem = new THREE.Mesh( gemGeom, gemMaterial );
 
-			moverGroup.add( present );
+			moverGroup.add( gem );
 
-			present.position.x = ATUtil.randomRange(-MyConfig.FLOOR_WIDTH/2, MyConfig.FLOOR_WIDTH/2);
-			present.position.z = ATUtil.randomRange(-MyConfig.FLOOR_DEPTH/2, MyConfig.FLOOR_DEPTH/2);
+			gem.position.x = ATUtil.randomRange(-MyConfig.FLOOR_WIDTH/2, MyConfig.FLOOR_WIDTH/2);
+			gem.position.z = ATUtil.randomRange(-MyConfig.FLOOR_DEPTH/2, MyConfig.FLOOR_DEPTH/2);
 
 			// 宝石光  点光源（颜色，强度，距离）
-			var presentLight = new THREE.PointLight( 0xFF00FF, 1.0, 600 );
-			present.add( presentLight );
+			var gemLight = new THREE.PointLight( 0xFF00FF, 1.0, 600 );
+			gem.add( gemLight );
 
-			present.collided = false;
+			gem.collided = false;
 
-			presentGroup.push( present );
+			gemGroup.push( gem );
 		}
+
+
+
+
 
 		car = new THREE.Object3D();
 		//加载模型
@@ -254,23 +258,23 @@ var MyGame = function() {
 		MySnow.shift();
 
 		// 变换宝石
-		for(  i = 0; i < PRESENT_COUNT; i++) {
 
-			var present = presentGroup[i];
-			present.position.z +=MyConfig.MOVE_STEP;
+		for(  i = 0; i < GEM_COUNT; i++) {
 
-			if (present.position.z + moverGroup.position.z > MyConfig.FLOOR_DEPTH/2){
-				present.collided = false;
-				present.position.z	-= MyConfig.FLOOR_DEPTH;
+			var gem = gemGroup[i];
+			gem.position.z +=MyConfig.MOVE_STEP;
+
+			if (gem.position.z + moverGroup.position.z > MyConfig.FLOOR_DEPTH/2){
+				gem.collided = false;
+				gem.position.z	-= MyConfig.FLOOR_DEPTH;
 				//重新随机化x位置
-				present.posj = Math.random();
+				gem.posj = Math.random();
 				var xRange = MyConfig.FLOOR_WIDTH/2 * 0.7;
-				present.position.x = ATUtil.randomRange(-xRange,xRange);
+				gem.position.x = ATUtil.randomRange(-xRange,xRange);
 
 			}
 
 		}
-
 	}
 
 	function animate() {
@@ -290,6 +294,7 @@ var MyGame = function() {
 			//移动速度加快
 			moveSpeed += delta *ACCEL;
 			moveSpeed = Math.min(moveSpeed,maxSpeed);
+			// console.log(moveSpeed);
 
 			// 如果同时按住左右，会往右边移动
 			if (rightDown){		// 往右移动
@@ -324,14 +329,16 @@ var MyGame = function() {
 
 		}else{
 			//死后慢下来
-			moveSpeed *= 0.95;
+			moveSpeed *= 0.5;
 
 		}
 
-		for(  i = 0; i < PRESENT_COUNT; i++) {
-			presentGroup[i].rotation.x += 0.01;
-			presentGroup[i].rotation.y += 0.02;
+		// 宝石旋转
+		for(  i = 0; i < GEM_COUNT; i++) {
+			gemGroup[i].rotation.x += 0.01;
+			gemGroup[i].rotation.y += 0.02;
 		}
+
 
 
 
@@ -357,21 +364,20 @@ var MyGame = function() {
 			var camPos = MyMain.getCamera().position.clone();
 			camPos.z -= 200;
 
-			for (var i = 0; i < PRESENT_COUNT; i++) {
-				p = presentGroup[i].position.clone();
+			for (var i = 0; i < GEM_COUNT; i++) {
+				p = gemGroup[i].position.clone();
 				p.y = 0; //忽视高度
 				p.add(moverGroup.position);
 				dist = p.distanceTo(camPos);
 
 				// 如果宝石和相机的距离<200 撞击~
-				if (dist < 200 && !presentGroup[i].collided){
+				if (dist < 200 && !gemGroup[i].collided){
 					// 得到宝石
-					presentGroup[i].collided = true;
+					gemGroup[i].collided = true;
 					MyMain.onScorePoint();	// 加分
 				}
 
 			}
-
 			//树的
 			for(  i = 0; i < TREE_COUNT; i++) {
 

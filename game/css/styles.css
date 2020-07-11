@@ -27,18 +27,17 @@ body {
 	width:200px;
 	text-align: center;
 	margin: 0 auto;
-	left:0;
-	right:0;
+	left:200;
 	opacity:0;
 	font-size:10vmin;
 	letter-spacing: 1px;
 }
 
-#splash{
+#surface{
 	position:absolute;
 	width:500px;
 	height:500px;
-	background-image:url(../res/img/xmas-splash.png);
+	background-image:url(../res/img/xmas-surface.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: 100% 100%;
@@ -46,7 +45,7 @@ body {
 	cursor:pointer;
 }
 
-#prompt{
+#tip{
 	position:absolute;
 	width:100%;
 	height:30%;
@@ -58,12 +57,13 @@ body {
 	letter-spacing: 2px;
 }
 
-#prompt-big{
+#tip-big{
 	margin-top: 4%;
 }
 
-#prompt-small{
+#tip-small{
 	margin-top: 5%;
+	font-size:13px;
 }
 
 #info{
@@ -82,7 +82,7 @@ a { color: #fff; }
 #music-toggle{
 	position:absolute;
 	top:0;
-	right:0;
+	left:0;
 	margin:10px;
 	width:40px;
 	height:40px;
@@ -93,7 +93,27 @@ a { color: #fff; }
 	opacity:0;
 }
 
+#AI-toggle{
+	position:absolute;
+	top:0;
+	left:40px;
+	margin:10px;
+	width:40px;
+	height:40px;
+	background-image:url(../res/img/AI-toggle.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	cursor: pointer;
+	opacity:0;
+}
+
+
+
 #music-toggle.off{
+	background-position: -40px 0;
+}
+
+#AI-toggle.off{
 	background-position: -40px 0;
 }
 

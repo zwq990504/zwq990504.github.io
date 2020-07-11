@@ -10,6 +10,7 @@ var MyConfig = {
 	playSound:true,
 	playMusic:true,
 	hitDetect:true,
+	// AIDetect:true,
 
 	//常量
 	FLOOR_WIDTH: 4200, 	// x方向地板尺寸
@@ -29,15 +30,15 @@ var MyMain = function() {
 	var sndPickup;			// 捡宝石
 	var sndCollide;			// 碰撞
 	var sndMusic;			// 音乐
+	var sndAI;
 
 	var lastEvent;
-	var stats;
-	var splashSize;
+	var surfaceSize;
 
 	var backgroundColor = 0x061837;	//背景颜色
 
 
-	var splashMode = 0; //0->2 不同界面
+	var surfaceMode = 0; //0->2 不同界面
 	var isFirstGame = true;
 
 
@@ -52,8 +53,9 @@ var MyMain = function() {
 
 		$(document).on('keydown', onKeyDown, false);
 		$(document).on('keyup', onKeyUp, false);
-		$("#splash").on('mousedown', onMouseDown, false);
-		$("#splash").on('tap', onMouseDown, false);
+		$("#surface").on('mousedown', onMouseDown, false);
+		$("#surface").on('tap', onMouseDown, false);
+		$("#surface").on('tap', onMouseDown, false);
 
 
 		//注册音乐
@@ -69,6 +71,10 @@ var MyMain = function() {
 			$("#music-toggle").on("click",toggleMusic);
 			$("#music-toggle").on("tap",toggleMusic);
 		}
+
+		// $("#AI-toggle").on("click",toggleAI);
+		// $("#AI-toggle").on("tap",toggleAI);
+
 
 
 		// 初始化 3D
@@ -95,7 +101,7 @@ var MyMain = function() {
 
 		MyGame.init();
 
-		 resize();
+		resize();
 
 		animate();
 
@@ -108,19 +114,20 @@ var MyMain = function() {
 		//终点状态：opacity:0
 		//补间：5秒完成状态改变
 
-		TweenMax.fromTo($('#splash') , 1, {autoAlpha: 0},{autoAlpha: 1,delay:1});
+		TweenMax.fromTo($('#surface') , 1, {autoAlpha: 0},{autoAlpha: 1,delay:1});
 		TweenMax.fromTo($('#info') , 1, {autoAlpha: 0},{autoAlpha: 1,delay:1});
 		TweenMax.fromTo($('#music-toggle') , 1, {autoAlpha: 0},{autoAlpha: 1,delay:1});
+		TweenMax.fromTo($('#AI-toggle') , 1, {autoAlpha: 0},{autoAlpha: 1,delay:1});
 
 		$("#preloader").css("display","none");
 
 		//预加载初始页面图像
 		var img1 = new Image();
-		img1.src = "res/img/xmas-splash.png";
+		img1.src = "res/img/xmas-surface.png";
 		var img2 = new Image();
 		img2.src = "res/img/xmas-best.png";
 		var img3 = new Image();
-		img3.src = "res/img/xmas-wipeout.png";
+		img3.src = "res/img/xmas-go.png";
 
 	}
 
@@ -138,6 +145,20 @@ var MyMain = function() {
 
 	}
 
+	// function toggleAI(){
+	//
+	// 	$(this).toggleClass("off");
+	//
+	// 	if($(this).hasClass("off")){
+	// 		MyConfig.AIDetect = false;
+	// 		console.log('关闭AI！');
+	// 	}else{
+	// 		MyConfig.AIDetect = true;
+	// 		console.log('开启AI！');
+	// 	}
+	//
+	// }
+
 	$(window).resize(function() {
 		resize();
 	});
@@ -151,24 +172,24 @@ var MyMain = function() {
 		camera.aspect = w / h;
 
 		// 适应中心
-		splashSize = Math.min(w,h)*0.85;
-		splashSize = Math.min(splashSize,500);
+		surfaceSize = Math.min(w,h)*0.85;
+		surfaceSize = Math.min(surfaceSize,500);
 
-		$("#splash").css("width", splashSize + "px");
-		$("#splash").css("height", splashSize+ "px");
+		$("#surface").css("width", surfaceSize + "px");
+		$("#surface").css("height", surfaceSize+ "px");
 
-		$("#splash").css("left",(w - splashSize)/2 + "px");
-		$("#splash").css("top",(h - splashSize)/2 + "px");
+		$("#surface").css("left",(w - surfaceSize)/2 + "px");
+		$("#surface").css("top",(h - surfaceSize)/2 + "px");
 
 		// 大小
-		if (splashMode === 0){
-			$('#prompt-big').css("font-size" , splashSize * 0.06 + "px");
-			$('#prompt-small').css("font-size" , splashSize * 0.04 + "px");
-		}else if(splashMode == 1){
-			$('#prompt-big').css("font-size" , splashSize * 0.09 + "px");
+		if (surfaceMode === 0){
+			$('#tip-big').css("font-size" , surfaceSize * 0.06 + "px");
+			$('#tip-small').css("font-size" , surfaceSize * 0.04 + "px");
+		}else if(surfaceMode == 1){
+			$('#tip-big').css("font-size" , surfaceSize * 0.09 + "px");
 		}else{
-			$('#prompt-big').css("font-size" , splashSize * 0.08 + "px");
-			$('#prompt-small').css("font-size" , splashSize * 0.04 + "px");
+			$('#tip-big').css("font-size" , surfaceSize * 0.08 + "px");
+			$('#tip-small').css("font-size" , surfaceSize * 0.04 + "px");
 		}
 
 	}
@@ -194,26 +215,27 @@ var MyMain = function() {
 
 		// 显示分数
 		TweenMax.to($('#score-text') , 0.1, {autoAlpha: 0});
-		TweenMax.fromTo($('#splash') , 0.5, {scale: 0.6,autoAlpha: 0},{scale: 1,autoAlpha: 1,ease:Expo.easeOut});
+		TweenMax.fromTo($('#surface') , 0.5, {scale: 0.6,autoAlpha: 0},{scale: 1,autoAlpha: 1,ease:Expo.easeOut});
 		TweenMax.fromTo($('#info') , 0.5, {autoAlpha: 0},{autoAlpha: 1});
 		TweenMax.fromTo($('#music-toggle') , 0.5, {autoAlpha: 0},{autoAlpha: 1});
+		TweenMax.fromTo($('#AI-toggle') , 0.5, {autoAlpha: 0},{autoAlpha: 1});
 
 		if (score > hiScore){
-			splashMode = 1;
+			surfaceMode = 1;
 			hiScore = score;
-			$('#splash').css('background-image', 'url(res/img/xmas-best.png)');
-			$('#prompt-big').text("SCORE: " + score);
-			$('#prompt-small').css('display','none');
-			$('#prompt-big').css("margin-top" , "10%");
+			$('#surface').css('background-image', 'url(res/img/xmas-best.png)');
+			$('#tip-big').text("SCORE: " + score);
+			$('#tip-small').css('display','none');
+			$('#tip-big').css("margin-top" , "10%");
 
 		}else{
-			splashMode = 2;
-			$('#splash').css('background-image', 'url(res/img/xmas-wipeout.png)');
-			$('#prompt-big').text("SCORE: " + score);
-			$('#prompt-small').text("BEST SCORE: " + hiScore);
-			$('#prompt-small').css('display','block');
-			$('#prompt-big').css("margin-top" , "8%");
-			$('#prompt-small').css("margin-top" , "2%");
+			surfaceMode = 2;
+			$('#surface').css('background-image', 'url(res/img/xmas-go.png)');
+			$('#tip-big').text("SCORE: " + score);
+			$('#tip-small').text("BEST SCORE: " + hiScore);
+			$('#tip-small').css('display','block');
+			$('#tip-big').css("margin-top" , "8%");
+			$('#tip-small').css("margin-top" , "2%");
 		 }
 
 		 resize();
@@ -222,9 +244,10 @@ var MyMain = function() {
 	}
 
 	function onGameStart(){
-		TweenMax.to($('#splash') , 0.3, {autoAlpha: 0});
+		TweenMax.to($('#surface') , 0.3, {autoAlpha: 0});
 		TweenMax.to($('#info') , 0.3, {autoAlpha: 0});
 		TweenMax.to($('#music-toggle') , 0.3, {autoAlpha: 0});
+		TweenMax.to($('#AI-toggle') , 0.3, {autoAlpha: 0});
 		TweenMax.to($('#score-text') , 0.3, {autoAlpha: 1,delay:0.3});
 		score = 0;
 		$("#score-text").text(score);
@@ -238,7 +261,9 @@ var MyMain = function() {
 	function animate(){
 
 		requestAnimationFrame( animate );
+
 		MyGame.animate();
+
 
 		renderer.render(scene, camera);
 
@@ -326,6 +351,7 @@ var MyMain = function() {
 			onGameStart();
 		}
 	}
+
 
 	return {
 		init:init,
