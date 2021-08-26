@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>雪地丛林赛车</title>
+	<meta charset="utf-8">
+	<link href="css/styles.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+ <div id="surface">			<!--开始界面 -->
+		<div id ="tip">		<!--提示文字 -->
+			<div id="tip-big"> 收集水晶,躲开树！</div>
+			<div id="tip-small"> 方向键左右来控制移动 </div>
+		</div>
+	</div>
+
+	<div id="score-text">0</div>
+	<div id="container"style="position: absolute; z-index: -1;"></div>
+	<div id="music-toggle"></div>
+	<!-- <div id="AI-toggle"></div> -->
+	<div id="preloader"></div>
+
+
+	<!-- 3rd party Libs -->
+	<script src="lib/three.min.js"></script>
+	<script src="lib/DDSLoader.js"></script>
+	<script src="lib/MTLLoader.js"></script>
+	<script src="lib/OBJMTLLoader.js"></script>
+	<script src="lib/atutil.js"></script>
+	<script src="lib/zepto.min.js"></script>
+	<script src="lib/TweenMax.min.js"></script>
+	<script src="lib/howler.core.min.js"></script>
+
+	<script src="src/main.js"></script>
+	<script src="src/game.js"></script>
+	<script src="src/snow.js"></script>
+
+
+</body>
+</html>
